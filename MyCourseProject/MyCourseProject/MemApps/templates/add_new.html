@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block registration %}
+
+{% endblock %}
+
+{% block main %}
+
+{% for i in images %}
+<div class="image">
+    <div class="test">
+    <form method="POST" action="{% url 'add_mem_admin' %}">
+            <input type="hidden" name="url_image" value="{{i.url_image.url}}">
+            <input type="hidden" name="mem_id" value="{{i.id}}">
+            <img src="{{ i.url_image.url }}" class="img-responsive" />
+            <input type="text" name="tags"><br>
+            <input type="submit" class="btn btn-primary btn-lm" value="Добавить">
+    </form>
+        <form method="POST" action="{% url 'delete_new' %}">
+        <input type="hidden" name="mem_id" value="{{i.id}}">
+        <input type="submit" class="btn btn-primary btn-lm" value="Удалить">
+    </form>
+</div>
+
+
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block left %}
+<br>
+<br>
+<br>
+<form method="POST" action="{% url 'logout' %}" class="row g-3" novalidate>
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Выйти</button><br>
+</form>
+
+
+ <form method="POST" action="{% url 'upload' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+        {{ form.as_p }}
+    <button type="submit" class="btn btn-primary btn-lm">Добавить новые</button><br>
+  </form>
+<br>
+
+{% endblock %}
+

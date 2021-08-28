@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block registration %}
+
+{% endblock %}
+
+
+{% block main %}
+
+{% for i in images %}
+<img src="{{ i.url_image.url }}" class="img-responsive" style="width: 100%; float: left; margin-right: 10px;" />
+{% endfor %}
+
+{% endblock %}
+
+
+
+

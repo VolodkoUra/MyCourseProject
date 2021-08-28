@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block main %}
+{% endblock %}
+{% block registration %}
+<form method="POST" action="{% url 'registration' %}" class="row g-3" novalidate>
+    {% csrf_token %}
+    <input type="text" class="form-control" placeholder="Введите логин" name="login">
+    <input type="password" class="form-control" placeholder="Введите пароль" name="password">
+    <input type="date" class="form-control" placeholder="Введите дату рождения" name="date">
+    <input type="email" class="form-control" placeholder="Введите Email" name="email">
+    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+    <a class="btn btn-primary btn-lm" href='http://127.0.0.1:8000'>Назад</a>
+</form>
+{% endblock %}

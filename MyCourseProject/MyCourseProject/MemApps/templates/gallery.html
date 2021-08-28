@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block registration %}
+
+{% endblock %}
+
+{% block main %}
+{% csrf_token %}
+{% for index in gallery_all %}
+<img src="{{ index.url_image.url }}" class="img-responsive" />
+{% endfor %}
+{% endblock %}
+
+{% block left %}
+
+<form method="POST" action="{% url 'logout' %}" class="row g-3" novalidate>
+    {% csrf_token %}
+    <br><br><br><br><br><br>
+    <button type="submit" class="btn btn-primary">Выйти</button>
+</form>
+<a href="{% url 'login_user' %}" class="btn btn-primary btn-lm">Назад</a>
+{% endblock %}

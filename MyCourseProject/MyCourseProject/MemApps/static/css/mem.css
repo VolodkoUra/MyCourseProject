@@ -1,0 +1,36 @@
+header {
+position: fixed;
+width: 100%;
+height: 70px;
+background: #8117a8;
+border-radius: 10%;
+font-size: 250%;
+
+}
+.header{
+position: right;
+margin-left: 45%;
+position: absolute;
+font: menu;
+font-style: italic;
+font-size: 100%;
+}
+.col-6{
+width: 50%;
+background: silver; /* Цвет фона */
+}
+img{
+border: 2px solid #ff0000;
+width: 90%;
+margin: 10px;
+}
+.main{
+background: silver; /* Цвет фона */
+}
+
+.test{
+width: 100%;
+height: 100%;
+border: 2px solid #ff0000;
+}
+
