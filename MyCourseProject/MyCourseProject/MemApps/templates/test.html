@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block registration %}
+<p>Hello world</p>
+{% endblock %}
+
+{% block main %}
+
+<div class="row allimages">
+    {% for i in images %}
+        {% if forloop.last %}
+            <div class="card images last-image" style="width: 100%;" image-data="{{i.date_mem}}">
+        {% else %}
+            <div class="card images" style="width: 100%;">
+        {% endif %}
+            <img src="{{ i.url_image.url }}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">Картинка</h5>
+                <a href="#" class="btn btn-primary">Добавить</a>
+            </div>
+            </div>
+    {% endfor %}
+</div>
+
+{% if images.count >= 3 %}
+    <p class="text-center mt-2"><button class="btn btn-success load-more" id="load-more">Хочу еще мамасиков</button></p>
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $('#load-more').on('click', function () {
+        let lastImage = $('.last-image').attr('image-data')
+        let data = {
+            lastImage: lastImage
+        }
+        $('.images').removeClass('last-image')
+        $('.images').removeAttr('image-data')
+        $.ajax({
+            method: "GET",
+            dataType: "json",
+            data: data,
+            url: '{% url "load-more-image" %}',
+            success: function (data){
+                console.log(data)
+                let result = data['data']
+                console.log(result)
+                if(!result){
+                    $('.load-more').css('display', 'none')
+                } else {
+                    $.each(result, function(key, obj){
+                    console.log(key, obj)
+                    console.log(obj)
+                    console.log(obj['last_image'])
+                     if(obj['last_images']){
+                        $('.allimages').append(
+                            '<div class="card images last-image" style="width: 100%;" image-data="' + obj['id'] + '">' +
+                            '<img src="' + obj['url_image'] + '" class="card-img-top"' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">Картинка</h5>' +
+                            '<a href="#" class="btn btn-primary">Добавить</a>' +
+                            '</div>'+
+                            '</div>')
+                            console.log(obj['url_image'] )
+                     } else {
+                       $('.allimages').append(
+                            '<div class="card images " style="width: 100%;">' +
+                            '<img src="' + obj['url_image'] + '" class="card-img-top"' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">Картинка</h5>' +
+                            '<a href="#" class="btn btn-primary">Добавить</a>' +
+                            '</div>'+
+                            '</div>')
+                            console.log(obj['url_image'] )
+                     }
+
+
+                    })
+                }
+
+
+            }
+        })
+    })
+</script>
+
+{% endblock %}
+
+
+{% block left %}
+<br>
+<br>
+<br>
+<a href="{% url 'gallery' %}" class="btn btn-primary btn-lm">Мои мемы</a><br>
+<br>
+<form method="POST" action="{% url 'logout' %}" class="row g-3" novalidate>
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Выйти</button>
+    <br>
+</form>
+
+
+<form method="POST" action="{% url 'upload' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary btn-lm">Добавить новые</button>
+    <br>
+</form>
+<br>
+{% if role == "admin" %}
+    <a href="{% url 'add_new' %}" class="btn btn-primary btn-lm">Просмотреть добавленые другими пользователями</a><br>
+    <br>
+    <a href="#" class="btn btn-primary btn-lm">Добавить админа</a><br>
+{% endif %}
+<a href="{% url 'login_user' %}" class="btn btn-primary btn-lm">Назад</a><br>
+
+{% endblock %}

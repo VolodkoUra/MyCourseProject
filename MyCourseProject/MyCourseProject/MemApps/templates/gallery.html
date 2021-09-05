@@ -5,8 +5,17 @@
 
 {% block main %}
 {% csrf_token %}
-{% for index in gallery_all %}
-<img src="{{ index.url_image.url }}" class="img-responsive" />
+{% for index in gallery %}
+<div class="test">
+
+    <form method="POST" action="{% url 'delete_gallery' %}">
+
+        <input type="hidden" name="mem_id" value="{{index.id}}">
+        <img src="{{ index.url_image.url }}" class="img-responsive" />
+        <input type="submit" value="Удалить">
+    </form>
+
+</div>
 {% endfor %}
 {% endblock %}
 

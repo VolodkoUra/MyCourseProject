@@ -15,7 +15,9 @@ urlpatterns = [
     path('upload/', views.model_form_upload, name='upload'),
     path('add_new/', views.add_new, name='add_new'),
     path('delete_new/', views.delete_new, name='delete_new'),
+    path('delete_gallery/', views.delete_gallery, name='delete_gallery'),
     path('add_mem_admin/', views.add_mem_admin, name='add_mem_admin'),
+    path('load-more-image/', views.dynamicImageLoad, name='load-more-image'),
 
 ]
 
