@@ -18,6 +18,7 @@ urlpatterns = [
     path('delete_gallery/', views.delete_gallery, name='delete_gallery'),
     path('add_mem_admin/', views.add_mem_admin, name='add_mem_admin'),
     path('load-more-image/', views.dynamicImageLoad, name='load-more-image'),
+    path('chat/', views.chat, name='chat'),
 
 ]
 

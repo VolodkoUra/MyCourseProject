@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
-{% block registration %}
-<p>Hello world</p>
-{% endblock %}
+
 
 {% block main %}
 
@@ -10,26 +8,30 @@
     {% for i in images %}
         {% if forloop.last %}
             <div class="card images last-image" style="width: 100%;" image-data="{{i.date_mem}}">
+                <p>YES</p>
         {% else %}
             <div class="card images" style="width: 100%;">
+                <p>NO</p>
         {% endif %}
             <img src="{{ i.url_image.url }}" class="card-img-top">
-            <div class="card-body">
-                <h5 class="card-title">Картинка</h5>
-                <a href="#" class="btn btn-primary">Добавить</a>
-            </div>
+                <div class="card-body">
+                    <h5 class="card-title">Картинка</h5>
+                    <a href="#" class="btn btn-primary">Добавить</a>
+                </div>
             </div>
     {% endfor %}
 </div>
 
-{% if images.count >= 3 %}
+{% if images|length >= 3 %}
     <p class="text-center mt-2"><button class="btn btn-success load-more" id="load-more">Хочу еще мамасиков</button></p>
 {% endif %}
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
 <script type="text/javascript">
     $('#load-more').on('click', function () {
         let lastImage = $('.last-image').attr('image-data')
+        console.log(lastImage)
         let data = {
             lastImage: lastImage
         }
@@ -43,6 +45,8 @@
             success: function (data){
                 console.log(data)
                 let result = data['data']
+                console.log(data)
+                console.log('*****')
                 console.log(result)
                 if(!result){
                     $('.load-more').css('display', 'none')
@@ -51,10 +55,11 @@
                     console.log(key, obj)
                     console.log(obj)
                     console.log(obj['last_image'])
-                     if(obj['last_images']){
+                     if(obj['last_image']){
                         $('.allimages').append(
-                            '<div class="card images last-image" style="width: 100%;" image-data="' + obj['id'] + '">' +
-                            '<img src="' + obj['url_image'] + '" class="card-img-top"' +
+                            '<div class="card images last-image" style="width: 100%;" image-data="' + obj['date_mem'] + '">' +
+                            '<p>YES</p>' +
+                            '<img src="media/' + obj['url_image'] + '" class="card-img-top">' +
                             '<div class="card-body">' +
                             '<h5 class="card-title">Картинка</h5>' +
                             '<a href="#" class="btn btn-primary">Добавить</a>' +
@@ -64,7 +69,8 @@
                      } else {
                        $('.allimages').append(
                             '<div class="card images " style="width: 100%;">' +
-                            '<img src="' + obj['url_image'] + '" class="card-img-top"' +
+                            '<p>NO</p>' +
+                            '<img src="media/' + obj['url_image'] + '" class="card-img-top">' +
                             '<div class="card-body">' +
                             '<h5 class="card-title">Картинка</h5>' +
                             '<a href="#" class="btn btn-primary">Добавить</a>' +
@@ -112,5 +118,128 @@
     <a href="#" class="btn btn-primary btn-lm">Добавить админа</a><br>
 {% endif %}
 <a href="{% url 'login_user' %}" class="btn btn-primary btn-lm">Назад</a><br>
+
+{% endblock %}
+
+
+
+{% block registration %}
+
+<div contenteditable="false" class="all-massege" id="all-massege">
+
+{% for i in message_list %}
+    {% if forloop.last %}
+        <div class="messages last-message" message-id="{{i.id}}">
+    {% else %}
+        <div class="messages">
+    {% endif %}
+            <p>{{i.user.user_name}} : {{i.massege}} : {{i.date_time_massege}}</p>
+        <div/>
+{% endfor %}
+</div>
+
+
+<form method="POST" id="form">
+
+    <input type="text" name="message" class="message">
+    <button type="submit" id = 'send-message'>Send</button>
+
+</form>
+
+
+<script type="text/javascript">
+    function show()
+    {
+        let mass = $('.last-message').attr('message-id');
+        console.log(mass);
+        data = {
+            'mass': mass
+        }
+        console.log(data);
+        $('.images').removeClass('last-message')
+        $('.images').removeAttr('message-id')
+        console.log('remove');
+        $.ajax({
+            method: "GET",
+            dataType: "json",
+            data: data,
+            url: '{% url 'chat' %}',
+            cache: false,
+
+            success: function(data){
+                console.log('func')
+                console.log(data)
+                let result = data['data']
+                console.log(data)
+                console.log('*****')
+                console.log(result)
+                if(result){
+                    $.each(result, function(key, obj){
+                    console.log(key, obj)
+                    console.log(obj)
+                    console.log(obj['massege'])
+                    if(obj['massege']){
+
+                        console.log(mass)
+                        $('.all-massege').append(
+                        '<div class="messages last-message" message-id="' + obj['id'] + '">'+
+                        '<p>YES</p>' +
+                        '<p>' + obj['user'] + obj['massege'] + obj['date_time_massege'] + '</p>'+
+                        '</div>')
+
+                    } else {
+                        $('.all-massege').append(
+                        '<div class="messages last-message" message-id="' + obj['id'] + '">'+
+                        '<p>NO</p>' +
+                        '<p>' + obj['user'] + obj['massege'] + obj['date_time_massege'] + '</p>'+
+                        '</div>')
+
+                        }
+
+                    })
+
+                }
+
+            }
+        })
+    }
+
+
+
+
+    $(document).ready(function(){
+
+        show();
+        setInterval('show()',5000);
+    });
+
+
+</script>
+
+
+
+
+<script type="text/javascript">
+        $(document).ready(function(){
+            $("#form").submit(function(event) {
+              event.preventDefault();
+              var form_data = $(this).serialize();
+              console.log(form_data)
+
+              $.ajax({
+                 method: "POST",
+                 url: {% url 'chat' %},
+                 data: form_data,
+                 success: function(data) {
+                    console.log(data)
+                    alert("Ваше сообщение отпрвлено!");
+                 }
+              });
+            });
+        });
+
+
+</script>
+
 
 {% endblock %}
