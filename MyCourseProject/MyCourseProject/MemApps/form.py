@@ -4,7 +4,7 @@ from .models import Memasik, MemIntermediate
 
 class RegistrationForm(forms.Form):
     login = forms.CharField(max_length=25)
-    password = forms.CharField(max_length=255)
+    password = forms.CharField(max_length=255, min_length=6)
     date = forms.DateField()
     email = forms.EmailField()
 
@@ -13,11 +13,15 @@ class LoginForm(forms.Form):
     login = forms.CharField(max_length=25)
     password = forms.CharField(max_length=255)
 
+class AddAdminForm(forms.Form):
+    user_name = forms.NullBooleanField()
+    role = forms.NullBooleanField()
+
 
 class ImageForm(forms.ModelForm):
     class Meta:
         model = MemIntermediate
-        fields = ['url_image', ]
+        fields = ['url_image']
 
 
 class ImageFormMain(forms.Form):

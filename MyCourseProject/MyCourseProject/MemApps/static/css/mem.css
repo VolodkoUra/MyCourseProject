@@ -5,6 +5,22 @@ height: 70px;
 background: #8117a8;
 border-radius: 10%;
 font-size: 250%;
+margin-bottom: 200px;
+
+}
+
+.h{
+background:#8117a8;
+width: 100%;
+height: 4em;
+display: flex;
+
+
+}
+
+
+.container-fluid{
+background-image: url(/media/download/2.jpg);
 
 }
 .header{
@@ -14,11 +30,18 @@ position: absolute;
 font: menu;
 font-style: italic;
 font-size: 100%;
+
 }
 .col-6{
 width: 50%;
 background: silver; /* Цвет фона */
+
 }
+
+.row{
+margin-top: 1000px;
+}
+
 img{
 border: 2px solid #ff0000;
 width: 90%;
@@ -33,4 +56,88 @@ width: 100%;
 height: 100%;
 border: 2px solid #ff0000;
 }
+
+.all-massege{
+overflow: auto;
+width: 100%;
+height: 30em;
+}
+
+.my_message{
+background: blue
+}
+
+
+.button_add_admin{
+border: none;
+background: none;
+}
+.right{
+background-image: url(/media/download/smile2.png);
+background-size: contain;
+position: fixed;
+right: 0%;
+
+}
+
+.block-button{
+position: fixed;
+width: 20%;
+}
+.btn btn-primary mt-2{
+background: #fbffc9fe;
+}
+
+.m-span {
+border-radius: 10px;
+background: #f7b7f5fe;
+width: auto;
+max-width: 90%;
+height: auto;
+display: inline-block;
+padding: 5px;
+
+word-wrap: break-word;
+}
+
+.span-message{
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 100%;
+line-height: 100%;
+/* or 13px */
+
+letter-spacing: 0.03em;
+
+color: #4f1919;
+/* Inside Auto Layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+margin: 10px 0px;
+word-wrap: break-word;
+}
+
+.context{
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 70%;
+line-height: 0%;
+/* or 13px */
+
+letter-spacing: 0.03em;
+
+color: #4f1919;
+}
+
+.my-mesg{
+float: right;
+}
+
+
+
+
+
 

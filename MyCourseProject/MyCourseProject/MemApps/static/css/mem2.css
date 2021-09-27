@@ -1,0 +1,348 @@
+.h{
+background:#36515c;
+width: 100%;
+height: 4em;
+display: flex;
+position: fixed;
+justify-content: center;
+align-items: center;
+max-width: 100%;
+opacity: 1;
+}
+
+body{
+background: #fffdd1
+}
+
+
+#name-site{
+margin-left: 8em;
+font-size: 3em;
+color: red;
+
+}
+
+.container-fluid{
+background-attachment: fixed;
+background: #fffdd1;
+}
+
+.all-massege{
+overflow: auto;
+width: 100%;
+height: 30em;
+}
+
+.button_add_admin{
+border: none;
+background: none;
+}
+
+.right{
+width: 100%;
+background-image: url(/media/download/smile2.png);
+background-size: contain;
+position: fixed;
+right: 0%;
+margin-top: 4em;
+margin-right: 0em;
+border-left: 0.2em solid;
+border-color: #36515c;
+height: 100%;
+
+}
+
+.col-7{
+margin-top: 4em;
+background: #fffdd1;
+height: 100%;
+
+}
+
+.col-3{
+margin-top: 4em;
+max-width: 26%;
+display: inline-block;
+}
+
+.col-2{
+margin-top: 4em;
+background: #fffdd1;
+}
+
+.style-button{
+color: #01758ffe;
+font-family: Cambria Math;
+font-weight: bold;
+border: none;
+font-size: 1.2em;
+
+}
+
+.block-button{
+position: fixed;
+width: 16%;
+
+}
+
+#button-add{
+color: black;
+border-color: black;
+}
+
+.btn btn-primary mt-2{
+background: #fbffc9fe;
+}
+
+.m-span {
+border-radius: 10px;
+background: #bfaed6fd;
+width: auto;
+max-width: 90%;
+height: auto;
+display: inline-block;
+padding: 5px;
+word-wrap: break-word;
+}
+
+.span-message{
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 100%;
+line-height: 100%;
+/* or 13px */
+letter-spacing: 0.03em;
+color: #4f1919;
+/* Inside Auto Layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+margin: 10px 0px;
+word-wrap: break-word;
+}
+
+.context{
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 70%;
+line-height: 0%;
+/* or 13px */
+letter-spacing: 0.03em;
+color: #4f1919;
+}
+
+.all-massege{
+border-left: 2px;
+height: 35em;
+}
+
+.my-mesg{
+float: right;
+}
+
+
+.exit{
+margin-left: 40em;
+justify-content: center;
+align-items: center;
+display: flex;
+padding: 0.8em;
+}
+
+.lab{
+margin-top: 2em;
+margin-right: 2em;
+}
+
+#user-name{
+font-weight: bold;
+}
+
+.images{
+border-radius: 2em;
+background: #b2a8bafe;
+padding: 1em;
+float: left;
+margin-left: 2px;
+margin-right: 2px;
+margin-top: 2px;
+width: 100px;
+height: 550px;
+block-size: cover;
+}
+
+#div-img-top{
+max-width: 100%;
+max-height: 400px;
+
+}
+
+.img-body{
+width: 100%;
+height: 5px;
+}
+
+.div-img-top{
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.form1{
+display: flex;
+width: 2em;
+float: left;
+max-width: 100%;
+max-height: 100%;
+}
+
+.form2{
+display: flex;
+width: 2em;
+float: right;
+margin-right: 3.5em;
+max-width: 100%;
+max-height: 100%;
+}
+
+#button-scroll{
+display: flex;
+top: 100%
+}
+
+.category{
+width: 10%;
+height: 10px;
+}
+
+#login_iser{
+display: flex;
+float: left;
+}
+
+textarea{
+resize: none;
+overflow: auto;
+}
+
+#textarea{
+display: flex;
+float: left;
+}
+
+#send{
+display: flex;
+float: right;
+}
+
+.dropbtn {
+color: #01758ffe;
+border-right: none;
+
+font-family: Cambria Math;
+font-weight: bold;
+font-size: 0.9em;
+padding-left: 0.5em;
+padding-right: 0.5em;
+}
+
+.img-body{
+display:inline-block;
+}
+
+.sel{
+color: #01758ffe;
+font-family: Cambria Math;
+font-weight: bold;
+font-size: 1.05em;
+margin-left: -5px;
+padding-left: 0;
+padding-right: 0;
+max-width: 10em;
+
+}
+.registr{
+width: 30em;
+height: 30em;
+justify-content: center;
+align-items: center;
+background: none;
+margin-left: 20em;
+}
+
+.end{
+width: 116%;
+height: 100%;
+margin-left: -2.1em;
+padding: 1em;
+background: #fffdd1;
+}
+
+.update_user{
+width: 17em;
+position: relative;
+left: 10em;
+height: 8em;
+margin-top: 2em;
+}
+
+.all_users{
+border: 0.1em solid silver;
+overflow: auto;
+position: relative;
+line-height: 1em;
+top: 1em;
+left: 10em;
+height: 25em;
+width: 17em;
+text-align: center;
+padding: 0.5em;
+}
+
+.main_add_admin{
+width: 100%;
+height: 100%;
+height: 35.5em;
+
+}
+
+#btn-change{
+width: 17em;
+}
+
+#inp_tag{
+width: 19.5em;
+margin-left: 0.2em;
+word-wrap: break-word;
+word-wrap: break-word;
+}
+
+.img-body{
+word-wrap: break-word;
+word-wrap: break-word;
+}
+
+#add_tag{
+margin-left: 0.2em;
+}
+
+#del_tag{
+margin-top: 0.95em;
+margin-left: -0.5em;
+}
+
+#formFileMultiple{
+width: 20em;
+}
+#add{
+width: 20em;
+}
+.add_new{
+margin-left: 12em;
+color: #01758ffe;
+font-family: Cambria Math;
+font-weight: bold;
+}
+

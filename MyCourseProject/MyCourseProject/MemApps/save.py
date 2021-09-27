@@ -132,4 +132,36 @@ def dynamicImageLoad(request):
         return JsonResponse({'data': data})
 
 
+
+<form>
+                    <div id="s">
+                        <button class="btn btn-outline-info style-button2" type="submit" >OK</button>
+                    </div>
+                    <div  id="o">
+                        <select class="btn btn-outline-info style-button">
+                            <option selected>Категории</option>
+                            {% for i in tags %}
+                                <option value="{{i.name_tag}}">{{i.name_tag}}</option>
+
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+
+                </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 """

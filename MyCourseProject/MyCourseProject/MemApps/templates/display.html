@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+
+{% block login %}
+    {% if login %}
+        <p>{{login}}</p>
+    {% endif %}
+{% endblock %}
+
 {% block registration %}
 
 {% endblock %}

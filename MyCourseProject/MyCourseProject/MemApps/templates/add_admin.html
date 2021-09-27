@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+
+{% block login %}
+    {% if login %}
+        <p>{{login}}</p>
+    {% endif %}
+{% endblock %}
+
+
+
+
+{% block main %}
+
+<div class="main_add_admin">
+    <div class="update_user">
+        <form method="POST" >
+            <select class="form-select" name="user_name">
+                <option selected>Выбрать пользователя</option>
+                {% for i in users %}
+                    <option value="{{i.user_name}}" name="user_name">{{i.user_name}}</option>
+                {% endfor %}
+
+            </select>
+            <select class="form-select" name="role">
+                <option selected>Выбрать роль пользователя</option>
+                    {% for i in roles %}
+                        <option value="{{i.name_roles}}" name="role">{{i.name_roles}}</option>
+
+                    {% endfor %}
+
+                </select>
+                <button class="btn btn-secondary" id="btn-change" type="submit">Изменить</button>
+
+        </form>
+    </div>
+
+
+    <div class="all_users">
+        {% for i in users %}
+            <p>{{i.user_name}} : {{i.id_name_role.name_roles}}</p>
+            <hr>
+        {% endfor %}
+    </div>
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+

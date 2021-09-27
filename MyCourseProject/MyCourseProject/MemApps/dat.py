@@ -192,3 +192,49 @@ chat(request):
 
 
 """
+
+def testing():
+    k=5
+    l=8
+    return k, l
+
+def main():
+    y = testing().l
+    print(y)
+
+main()
+
+
+""" 
+       print("1")
+        form = ImageForm(request.POST, request.FILES)
+        print(form)
+        print(request.FILES)
+        print(request.POST)
+        print("2")
+        if form.is_valid():
+            print("3")
+            form.save()
+            print("44")
+            mems = Memasik.objects.order_by('-date_mem')[:3]  # Вывод всех картинок
+            # mems = Memasik.objects.all()[:3]
+            data = []
+            for i in mems:
+                print(i.id, i.url_image, i.date_mem, type(i.date_mem))
+                date_mem = int(time.mktime((i.date_mem).timetuple()))
+                obj = {
+                    'id': i.id,
+                    'url_image': i.url_image,
+                    'date_mem': date_mem
+                }
+
+                data.append(obj)
+            # print(mems[0].url_image.url)
+            message_list = Massege.objects.all()
+            return render(request, 'test.html', {'form': form, 'images': data, 'message_list': message_list})
+        else:
+            form = ImageForm()
+            print("No VAlid")
+            print(form)
+
+        return render(request, 'test.html', {'form': form})"""

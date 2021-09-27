@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Roles(models.Model):
     name_roles = models.CharField(max_length=50)
 
@@ -21,11 +22,11 @@ class Massege(models.Model):
 # Промежуточная таблица для картинок, которые добавляют все пользователи
 class MemIntermediate(models.Model):
     url_image = models.ImageField(null=True, blank=False, upload_to="download/", max_length=255)
-
+    id_user = models.ForeignKey(Users, null=True, on_delete=models.CASCADE)
 
 
 class Memasik(models.Model):
-    #url_image = models.ForeignKey(MemIntermediate, on_delete=models.DO_NOTHING)
+    # url_image = models.ForeignKey(MemIntermediate, on_delete=models.DO_NOTHING)
     url_image = models.ImageField(null=True, blank=False, upload_to="download/", max_length=255)
     tags = models.CharField(max_length=255)
     date_mem = models.DateTimeField()
@@ -44,4 +45,3 @@ class Tags(models.Model):
 class MemTags(models.Model):
     id_mem = models.ForeignKey(Memasik, on_delete=models.CASCADE)
     id_tag = models.ForeignKey(Tags, on_delete=models.CASCADE)
-

@@ -1,50 +1,52 @@
 {% extends "base.html" %}
 
-{% block registration %}
 
+{% block login %}
+    {% if login %}
+        <p>{{login}}</p>
+    {% endif %}
 {% endblock %}
+
 
 {% block main %}
-
-{% for i in images %}
-<div class="image">
-    <div class="test">
-    <form method="POST" action="{% url 'add_mem_admin' %}">
-            <input type="hidden" name="url_image" value="{{i.url_image.url}}">
-            <input type="hidden" name="mem_id" value="{{i.id}}">
-            <img src="{{ i.url_image.url }}" class="img-responsive" />
-            <input type="text" name="tags"><br>
-            <input type="submit" class="btn btn-primary btn-lm" value="Добавить">
-    </form>
-        <form method="POST" action="{% url 'delete_new' %}">
-        <input type="hidden" name="mem_id" value="{{i.id}}">
-        <input type="submit" class="btn btn-primary btn-lm" value="Удалить">
+<div class="mb-3 add_new">
+    <form method="POST" enctype="multipart/form-data">
+        <label for="formFileMultiple" class="form-label">Выбирите файлы для загрузки</label>
+        <input class="form-control" type="file" id="formFileMultiple" name="file" multiple>
+        <button type="submit" class="btn btn-secondary" id="add">Добавить</button>
     </form>
 </div>
+    <div class="image">
+        {% for i in my_add_new_image %}
+            <div class="images" style="width: 49%;">
+                <div class="div-img-top">
+                    <img src="{{ i.url_image.url }}" class="img-responsive" id="div-img-top"/>
+                </div>
+                <div class="form1">
+                <form method="POST" action="{% url 'add_mem_admin' %}">
+                    <input type="hidden" name="url_image" value="{{i.url_image.url}}">
+                    <input type="hidden" name="mem_id" value="{{i.id}}">
+
+                    <input type="text" id="inp_tag" name="tags" maxlength="50" class="form-control" placeholder="Введи теги через пробел с хештегом">
+                    <input type="submit" id="add_tag" class="btn btn-primary btn-lm" value="Добавить">
+                </form>
+                </div>
+                <br>
 
 
-</div>
-{% endfor %}
+                <div class="form2">
+                <form method="POST" action="{% url 'delete_new' %}">
+                    <input type="hidden" name="mem_id" value="{{i.id}}">
+                    <input type="submit" id="del_tag" class="btn btn-primary btn-lm" value="Удалить">
+                </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}
 
-{% block left %}
-<br>
-<br>
-<br>
-<form method="POST" action="{% url 'logout' %}" class="row g-3" novalidate>
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Выйти</button><br>
-</form>
 
 
- <form method="POST" action="{% url 'upload' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-        {{ form.as_p }}
-    <button type="submit" class="btn btn-primary btn-lm">Добавить новые</button><br>
-  </form>
-<br>
-<a href="{% url 'login_user' %}" class="btn btn-primary btn-lm">Назад</a><br>
 
-{% endblock %}
 
