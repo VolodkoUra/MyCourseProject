@@ -8,13 +8,13 @@
 {% endblock %}
 
 {% block main %}
-{% csrf_token %}
+
 {% for index in gallery %}
 <div class="test">
 <div class="images" style="width: 49%;">
     <div class="div-img-top">
-    <form method="POST" action="{% url 'delete_gallery' %}">
-
+    <form method="GET" action="{% url 'delete_gallery' %}">
+        {% csrf_token %}
         <input type="hidden" name="mem_id" value="{{index.id}}">
         <img src="{{ index.url_image.url }}" class="img-responsive " id="div-img-top"/>
         <input class="btn btn-dark" type="submit" value="Удалить">

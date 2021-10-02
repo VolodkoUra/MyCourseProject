@@ -15,6 +15,7 @@
 <div class="main_add_admin">
     <div class="update_user">
         <form method="POST" >
+            {% csrf_token %}
             <select class="form-select" name="user_name">
                 <option selected>Выбрать пользователя</option>
                 {% for i in users %}

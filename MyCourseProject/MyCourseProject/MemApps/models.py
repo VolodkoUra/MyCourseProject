@@ -42,6 +42,3 @@ class Tags(models.Model):
     name_tag = models.CharField(max_length=50)
 
 
-class MemTags(models.Model):
-    id_mem = models.ForeignKey(Memasik, on_delete=models.CASCADE)
-    id_tag = models.ForeignKey(Tags, on_delete=models.CASCADE)

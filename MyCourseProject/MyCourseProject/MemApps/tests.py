@@ -3,7 +3,7 @@ import datetime
 from django.urls import reverse
 from django.utils import timezone
 from django.test import TestCase, Client, RequestFactory
-from .models import Users, Roles, Memasik, MyGallery
+from .models import Users, Roles, Memasik, MyGallery, MemIntermediate
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .views import login_user
 from .form import RegistrationForm, LoginForm
@@ -105,7 +105,6 @@ class LoginUserTest(TestCase):
 
 
 class TestGallery(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         role_user = Roles.objects.create(name_roles='custom')
@@ -117,7 +116,6 @@ class TestGallery(TestCase):
             id_name_role=role_user
         )
 
-    def setUp(self) -> None:
         image = SimpleUploadedFile('mem.jpg', content=b'', content_type='image/jpg')
         mem = Memasik.objects.create(
             url_image=image,
@@ -131,12 +129,15 @@ class TestGallery(TestCase):
         self.assertEqual(response2.status_code, 200)
         self.assertTemplateUsed(response2, 'gallery.html')
 
-    def test_gallery_add(self):
+    def test_gallery_add_delete(self):
         response = self.client.post('/login_user/', {'login': 'Nikolay', 'password': 'Nikolay'}, follow=True)
-        response2 = self.client.post('/gallery/', {'mem_id': Memasik.objects.get(id=1).id})
+        self.assertFalse(MyGallery.objects.all())
+        response2 = self.client.post('/gallery/', {'mem_id': Memasik.objects.get(id=2).id})
+        self.assertTrue(MyGallery.objects.all())
         print(response2.status_code)
         self.assertEqual(response2.status_code, 200)
         self.assertTemplateUsed(response2, 'gallery.html')
+
 
 
 class AddNewMem(TestCase):
@@ -151,17 +152,50 @@ class AddNewMem(TestCase):
             id_name_role=role_user
         )
 
+
     def test_add_new_mem(self):
-        response = self.client.post('/login_user/', {'login': 'Nikolay', 'password': 'Nikolay'}, follow=True)
+        response = self.client.post('/login_user/', {'login': self.user.user_name, 'password': self.user.user_password},
+                                    follow=True)
         response2 = self.client.get('/upload/')
         self.assertEqual(response2.status_code, 200)
         self.assertTemplateUsed(response2, 'add_new.html')
 
     def test_add_new_mem_post(self):
         response = self.client.post('/login_user/', {'login': 'Nikolay', 'password': 'Nikolay'}, follow=True)
+        image = SimpleUploadedFile('mem.jpg', content=b'', content_type='image/jpg')
+        response2 = self.client.post('/upload/', {'file': image})  # Загрузка картинки на сайт (в промежуточную таблицу)
+        self.assertEqual(response2.status_code, 200)
+        self.assertTemplateUsed(response2, 'add_new.html')
+        self.assertTrue(MemIntermediate.objects.all())
+        self.assertFalse(Memasik.objects.all())
+        response3 = self.client.post('/add_mem_admin/', {'tags': '#работа #дом',
+                                                         'url_image': MemIntermediate.objects.get(id=1).url_image.url,
+                                                         'mem_id': MemIntermediate.objects.get(id=1).id}, follow=True)
+        print(response3.status_code)
+        self.assertTrue(Memasik.objects.all())
+        self.assertTemplateUsed(response3, 'add_new.html')
 
-        response2 = self.client.post('/upload/', )
-        #??????
+
+class AddAdmin(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        role_user = Roles.objects.create(name_roles='custom')
+        cls.user = Users.objects.create(
+            user_name='Nikolay',
+            user_password='Nikolay',
+            email='nikolay@mail.ru',
+            date=datetime.datetime(year=1992, month=8, day=12),
+            id_name_role=role_user
+        )
+
+    def add_admin(self):
+        response = self.client.post('/login_user/', {'login': self.user.user_name, 'password': self.user.user_password},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        response2 = self.client.post('/add_admin/', {'user_name': self.user.user_name, 'role': Roles.objects.get(name_roles='admin')})
+        self.assertEqual(response2.status_code, 200)
+        self.assertTemplateUsed(response2, 'add_admin.html')
+
 
 """class RegistrModelTest(TestCase):
     @classmethod

@@ -5,6 +5,9 @@
     <title>Memasik</title>
     {% load static %}
     <!-- CSS only -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 
@@ -66,12 +69,17 @@
                     <hr>
                     <div class="dropdown">
                         <form method="GET" action="{% url 'select_category' %}">
+                            {% csrf_token %}
                             <button class="btn btn-outline-info dropbtn" type="submit">OK</button>
                             <select class="btn btn-outline-info sel" name="tags">
                                 <div class="dropdown-content">
                                     <option selected>Категории</option>
                                     {% for i in tags %}
-                                        <option>{{i.name_tag}}</option>
+                                        {% if i.name_tag == '' %}
+                                            <option>{{'Без категории'}}</option>
+                                        {% else %}
+                                            <option>{{i.name_tag}}</option>
+                                        {% endif %}
                                     {% endfor %}
 
                                 </div>
@@ -216,10 +224,12 @@
                     {% endfor %}
                 </div>
                 <div class="input-group mb-3">
-                    <form method="POST" id="form">
+                    <form method="POST" id="form" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <div id="textarea">
                             <textarea type="text" autofocus cols="15" rows="1" name="message"  class="form-control message" placeholder="Введите сообщение" aria-label="Recipient's username with two button addons"></textarea>
                         </div>
+
                         <div id="send">
                             <button type="submit" class="btn btn-danger" id = 'send-message'>Send</button>
                         </div>
@@ -231,6 +241,7 @@
     function show()
     {
         let mass = $('.last-message').data('messageId');
+
         console.log('mass: ', mass);
         data = {
             'mass': mass
@@ -307,7 +318,7 @@
     $(document).ready(function(){
 
         show();
-        setInterval('show()',10000);
+        setInterval('show()',1000);
     });
 
 
@@ -320,6 +331,7 @@
               event.preventDefault();
 
               var form_data = $(this).serialize();
+
               console.log('Данные формы ввода сообщения: ', form_data)
               $("#form")[0].reset();
 
@@ -329,8 +341,6 @@
                  data: form_data,
                  success: function(data) {
                     console.log(data)
-
-
 
                  }
               });
@@ -365,8 +375,6 @@
 
 
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
 {% block context %}
 
 {% endblock %}

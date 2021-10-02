@@ -11,6 +11,7 @@
 {% block main %}
 <div class="mb-3 add_new">
     <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <label for="formFileMultiple" class="form-label">Выбирите файлы для загрузки</label>
         <input class="form-control" type="file" id="formFileMultiple" name="file" multiple>
         <button type="submit" class="btn btn-secondary" id="add">Добавить</button>
@@ -24,20 +25,20 @@
                 </div>
                 <div class="form1">
                 <form method="POST" action="{% url 'add_mem_admin' %}">
+                    {% csrf_token %}
                     <input type="hidden" name="url_image" value="{{i.url_image.url}}">
                     <input type="hidden" name="mem_id" value="{{i.id}}">
-
                     <input type="text" id="inp_tag" name="tags" maxlength="50" class="form-control" placeholder="Введи теги через пробел с хештегом">
-                    <input type="submit" id="add_tag" class="btn btn-primary btn-lm" value="Добавить">
+                    <input type="submit" id="button-add" class="btn btn-outline-secondary"  value="Добавить">
                 </form>
                 </div>
                 <br>
 
-
                 <div class="form2">
-                <form method="POST" action="{% url 'delete_new' %}">
+                <form method="GET" action="{% url 'delete_new' %}">
+                    {% csrf_token %}
                     <input type="hidden" name="mem_id" value="{{i.id}}">
-                    <input type="submit" id="del_tag" class="btn btn-primary btn-lm" value="Удалить">
+                    <input type="submit" id="del_tag" class="btn btn-dark" value="Удалить">
                 </form>
                 </div>
             </div>

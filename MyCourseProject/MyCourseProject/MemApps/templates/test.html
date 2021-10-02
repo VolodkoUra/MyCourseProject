@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block main %}
-
+{% csrf_token %}
 <div class="low allimages">
     {% for i in images %}
         {% if forloop.last %}
@@ -22,6 +22,7 @@
                     <h5 class="img-title">{{i.tags}}</h5>
                     <div class="form1">
                          <form method="POST" action="{% url 'gallery' %}">
+                             {% csrf_token %}
                             <input type="hidden" name="mem_id" value="{{i.id}}">
                             <input class="btn btn-outline-secondary" id= "button-add" type="submit" value="Добавить">
                          </form>
@@ -30,6 +31,7 @@
                         {% if role == "admin" %}
                             <div class="form2">
                                 <form method="POST" action="{% url 'delete' %}">
+                                    {% csrf_token %}
                                     <input type="hidden" name="mem_id" value="{{i.id}}">
                                     <input class="btn btn-dark" type="submit" value="Удалить">
                                 </form>

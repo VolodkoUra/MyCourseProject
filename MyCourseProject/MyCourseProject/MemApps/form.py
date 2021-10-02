@@ -24,13 +24,6 @@ class ImageForm(forms.ModelForm):
         fields = ['url_image']
 
 
-class ImageFormMain(forms.Form):
-    url_image = forms.ImageField()
-    tags = forms.CharField(max_length=255)
-    date_mem = forms.DateTimeField()
-
-
-
 class GalleryForm(forms.Form):
     class Meta:
         model = Memasik
