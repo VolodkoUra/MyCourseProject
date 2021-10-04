@@ -292,7 +292,12 @@ def add_mem_admin(request):
 
 
 def dynamicImageLoad(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
+        print('X'*150)
+        print(request.POST.get('startFrom'))
+        return JsonResponse({'data': data})
+
+    elif request.method == 'GET':
         print('oooooooooooo')
         last_image = request.GET.get('lastImage')
         print(last_image, type(last_image))
