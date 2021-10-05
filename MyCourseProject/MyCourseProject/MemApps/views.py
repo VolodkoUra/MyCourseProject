@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Users, Memasik, MyGallery, Roles, Tags, Massege
-from .form import LoginForm, RegistrationForm, ImageForm, GalleryForm, MemIntermediate, AddAdminForm
+from .form import LoginForm, RegistrationForm, GalleryForm, MemIntermediate
 from datetime import datetime
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
@@ -9,8 +9,9 @@ import time, datetime
 from django.http import HttpResponse
 
 
-def func_display(r):  # Функция для вывода картинок на дисплей
-    mems = Memasik.objects.order_by('-date_mem')[:4]  # Берём из базы 3 самых свежих картинки
+# Функция для вывода картинок на дисплей
+def func_display(r):
+    mems = Memasik.objects.order_by('-date_mem')[:4]  # Берём из базы 4 самых свежих картинки
     data = []
     for i in mems:
         date_mem = int(time.mktime((i.date_mem).timetuple()))  # Перевод времени в секунды
@@ -25,7 +26,6 @@ def func_display(r):  # Функция для вывода картинок на
 
         data.append(obj)
 
-    print('DISPLAY')
     user = Users.objects.filter(user_name=r.session.get('login'))
 
     """
@@ -55,7 +55,7 @@ def func_display(r):  # Функция для вывода картинок на
                   {'images': data, 'role': role, 'message_list': k, 'login': r.session['login'], 'tags': all_tags})
 
 
-# функция загрузки картинок с локального компьютера на сайт + test OK
+# Функция загрузки картинок с локального компьютера на сайт
 def model_form_upload(request):
     if request.method == 'GET':
         user = Users.objects.filter(user_name=request.session.get('login'))[0]
@@ -66,16 +66,28 @@ def model_form_upload(request):
             int(request.session.get('datetime') - 3600)))  # Список сообщений для чата
 
         role = user.id_name_role.name_roles
+        message_list_parse = []
+        for i in message_list:
+            dat = int(time.mktime((i.date_time_massege).timetuple()))
+            t = datetime.datetime.utcfromtimestamp(dat).strftime('%d-%m-%Y %H:%M')
+            obj = {
+                'id': i.id,
+                'massege': i.massege,
+                'date_time_massege': t,
+                'user': i.user
+            }
+            message_list_parse.append(obj)
         return render(request, 'add_new.html',
-                      {'my_add_new_image': my_add_new_image, 'role': role, 'message_list': message_list,
+                      {'my_add_new_image': my_add_new_image, 'role': role, 'message_list': message_list_parse,
                        'login': request.session['login']})
     elif request.method == 'POST':
-        print(request.FILES.getlist('file'))
+        print(request.FILES.getlist('file'))  # Получаем загруженный файл
         user = Users.objects.filter(user_name=request.session.get('login'))[0]
-        my_add_new_image = MemIntermediate.objects.filter(id_user=user)
+        my_add_new_image = MemIntermediate.objects.filter(
+            id_user=user)  # Список картинок, которые загрузил на сайт конкретный пользователь
 
         files = request.FILES.getlist('file')
-        for i in files:
+        for i in files:  # Записываем новые (загруженные) мемы в базу (в промежуточную таюлицу)
             MemIntermediate.objects.create(url_image=i,
                                            id_user=Users.objects.filter(user_name=request.session.get('login'))[0])
         message_list = Massege.objects.filter(date_time_massege__gt=datetime.datetime.fromtimestamp(
@@ -86,6 +98,7 @@ def model_form_upload(request):
                        'login': request.session['login']})
 
 
+# Базовое представление
 def base(request):
     if request.session.get('login'):
         return func_display(request)
@@ -108,7 +121,7 @@ def base(request):
         return render(request, 'base.html', {'images': data})
 
 
-# Функция регистрации + test Ok
+# Функция регистрации
 def registration(request):
     if request.method == 'GET':
         return render(request, 'registration.html')  # Переход к форме регистрации
@@ -142,14 +155,14 @@ def registration(request):
             return render(request, 'registration.html', {'message': message_valid})
 
 
-# Выход из сайта + test OK
+# Выход из сайта
 def logout(request):
     del request.session['login']  # Удаляем сессию
     del request.session['datetime']  # Удаляем сессию
     return redirect('base')
 
 
-# Вход на сайт для зарегестрированных пользлвателей + test OK
+# Вход на сайт для зарегестрированных пользлвателей
 def login_user(request):
     if request.method == "GET":
         return redirect('base')
@@ -165,8 +178,6 @@ def login_user(request):
             print(user)
             if user:
                 # Если такой пользователь есть, то создаём сессию и показываем главную страницу
-                print('7777')
-                # k = datetime.datetime.fromtimestamp(int(last_image))
                 print(time.mktime((datetime.datetime.now()).timetuple()))
                 request.session['login'] = user.user_name
                 request.session['datetime'] = time.mktime((datetime.datetime.now()).timetuple())
@@ -176,7 +187,7 @@ def login_user(request):
         return redirect('base')
 
 
-#   Функция для галлереи + test OK
+#   Функция для галлереи
 def gallery(request):
     if request.method == 'GET':  # вход в галлерею
         name = request.session.get('login')
@@ -245,24 +256,22 @@ def gallery(request):
             return redirect('base')
 
 
-# функция удаления картинок, админом
+# функция удаления картинок, из промежуточной таблицы
 def delete_new(request):
     if request.method == 'GET':
         MemIntermediate.objects.filter(id=request.GET.get('mem_id')).delete()  # Удаляется выбраная картинка
     return redirect('upload')
 
 
-# функция удаления картинок, из галереи + test OK
+# функция удаления картинок, из галереи
 def delete_gallery(request):
     if request.method == 'GET':
         print(request.GET.get('mem_id'))
         MyGallery.objects.filter(id_mem=Memasik.objects.filter(id=request.GET.get('mem_id'))[0]).delete()
-        mems = MemIntermediate.objects.all()
-        print(mems)
     return redirect('gallery')
 
 
-# Функция добавления картинок из промежуточной таблиццы на сайт, с добавлением тегов test - OK
+# Функция добавления картинок из промежуточной таблиццы на сайт, с добавлением тегов
 def add_mem_admin(request):
     if request.method == 'POST':
         print(request.POST.get('tags'))
@@ -291,42 +300,22 @@ def add_mem_admin(request):
         return redirect('upload')
 
 
+# Функция динамической подгрузки мемов
 def dynamicImageLoad(request):
     if request.method == 'POST':
-        print('X'*150)
-        print(request.POST.get('startFrom'))
-        return JsonResponse({'data': data})
-
-    elif request.method == 'GET':
-        print('oooooooooooo')
-        last_image = request.GET.get('lastImage')
-        print(last_image, type(last_image))
-        # last_image = date_parse(last_image)
-        # resultDate= datetime(*last_image)
-        print('--------------------')
-        # print(resultDate, type(last_image))
-        k = datetime.datetime.fromtimestamp(int(last_image))
-
-        print(k)
-        # more_image = Memasik.objects.values('id', 'url_image')[:3]
+        print(request.POST.get('lastImage'))
+        last_image = request.POST.get('lastImage')  # получаем дату последнего мема
+        k = datetime.datetime.fromtimestamp(int(last_image))  # парсим дату
 
         more_image = Memasik.objects.filter(date_mem__lt=k).order_by('-date_mem').values('id', 'url_image', 'date_mem')[
-                     :4]
-        print(Memasik.objects.all())
-        print("-----")
-        print(Memasik.objects.values('id', 'url_image', 'date_mem'))
-        print("-----")
-        print(Memasik.objects.filter(date_mem__lt=k).values('id', 'url_image', 'date_mem'))
-        print("-----")
-        print(Memasik.objects.filter(date_mem__gt=k).values('id', 'url_image', 'date_mem'))
-        print('******')
-        print(more_image)
+                     :4]  # 4 картинки дата которых старше чем полученная из шаблона
+
         if not more_image:
             return JsonResponse({'data': False})
         data = []
 
-        for i in more_image:
-            date_mem = int(time.mktime((i['date_mem']).timetuple()))
+        for i in more_image: #если такие картинки есть, то проходим по ним цикле
+            date_mem = int(time.mktime((i['date_mem']).timetuple()))  # парсим дату
             tags_list = Memasik.objects.filter(id=i['id'])[0].tags
             obj = {
                 'id': i['id'],
@@ -337,16 +326,14 @@ def dynamicImageLoad(request):
             print(obj['date_mem'], obj['url_image'])
             print(tags_list)
             data.append(obj)
-        data[-1]['last_image'] = True
+        data[-1]['last_image'] = True #Последнему добавляем атрибут last_image, нужно для отображениия в шаблоне
 
         return JsonResponse({'data': data})
 
-
+#Функция для управления чатом (динамическая)
 def chat(request):
     if request.method == "GET":
         id_last_message = request.GET.get('mass')  # id последнего сообщения
-        print(id_last_message, type(id_last_message))
-
         # Берём все сообщения после последнего
         if id_last_message:
             message_list = Massege.objects.filter(id__gt=id_last_message).values('id', 'massege', 'user',
@@ -357,12 +344,8 @@ def chat(request):
             data = []
 
             for i in message_list:
-                print(i)
                 date_time_massege = int(time.mktime((i['date_time_massege']).timetuple()))
-                print(i['date_time_massege'])
-                print(date_time_massege)
                 t = datetime.datetime.utcfromtimestamp(date_time_massege).strftime('%d-%m-%Y %H:%M')
-                print(t, type(t))
                 obj = {
                     'id': i['id'],
                     'massege': i['massege'],
@@ -379,33 +362,40 @@ def chat(request):
 
 
     elif request.method == "POST":
-        print(request.session.get('login'), request.POST.get('message'))
-
         text_message = request.POST.get('message')
         print(Users.objects.filter(user_name=request.session.get('login')))
-
         if text_message:
             Massege.objects.create(massege=text_message,
                                    date_time_massege=datetime.datetime.now(),
                                    user=Users.objects.filter(user_name=request.session.get('login'))[0])
 
-            # Что возвращать?
-            message_list = Massege.objects.all()
-            # return render(request, 'test.html', {'message_list': message_list})
+
             return JsonResponse({'data': text_message})
         else:
             return JsonResponse({'data': text_message})
 
-
+#Функция для изменения ролей рользователей
 def add_admin(request):
     if request.method == "GET":
-        users_all = Users.objects.order_by('user_name').all() #Список всех пользователей отсартированный по алфавиту
-        roles_all = Roles.objects.all() # Список ролей
+        users_all = Users.objects.order_by('user_name').all()  # Список всех пользователей отсартированный по алфавиту
+        roles_all = Roles.objects.all()  # Список ролей
         message_list = Massege.objects.filter(date_time_massege__gt=datetime.datetime.fromtimestamp(
             int(request.session.get('datetime') - 3600)))  # Список сообщений для чата
+
+        message_list_parse = []
+        for i in message_list:
+            dat = int(time.mktime((i.date_time_massege).timetuple()))
+            t = datetime.datetime.utcfromtimestamp(dat).strftime('%d-%m-%Y %H:%M')
+            obj = {
+                'id': i.id,
+                'massege': i.massege,
+                'date_time_massege': t,
+                'user': i.user
+            }
+            message_list_parse.append(obj)
         return render(request, 'add_admin.html',
                       {'login': request.session['login'], 'users': users_all, 'roles': roles_all,
-                       'message_list': message_list})
+                       'message_list': message_list_parse})
     elif request.method == 'POST':
         user = request.POST.get('user_name')
         role = request.POST.get('role')
@@ -417,7 +407,7 @@ def add_admin(request):
             role_user.save()
         return redirect('add_admin')
 
-
+#Функция удаления картинок с главной страницы (доступна только для админа)
 def delete(request):
     if request.method == 'POST':
         print(request.POST.get('mem_id'))
@@ -426,28 +416,25 @@ def delete(request):
 
     return redirect('base')
 
-
+#Функция для отображения мемов по категориям
 def select_category(request):
     if request.method == "GET":
-        print(request.GET)
-        tag = request.GET.get('tags')
-        print(tag)
+        tag = request.GET.get('tags') #Получаем выбранный тег
 
-        if tag == 'Категории':
+        if tag == 'Категории': # Для вывода всех картинок
             return redirect('base')
 
         mem_all = Memasik.objects.all()
 
-        mem_select_tag = []
+        mem_select_tag = [] #Список мемов у которых есть тег выбранный в шаблоне
         for i in mem_all:
             tag_list = i.tags
-            print(tag_list)
             if tag in tag_list:
                 mem_select_tag.append(i)
 
-        if not mem_select_tag:
+        if not mem_select_tag: # Для картинок, которые без тегов
             mem_select_tag = Memasik.objects.filter(tags='')
-        print(mem_select_tag, 'x'*100)
+
 
         user = Users.objects.filter(user_name=request.session.get('login'))
         role = user[0].id_name_role.name_roles
@@ -469,7 +456,3 @@ def select_category(request):
         return render(request, 'test.html',
                       {'images': mem_select_tag, 'role': role, 'message_list': k, 'login': request.session['login'],
                        'tags': all_tags})
-
-
-def add_mem_chat(request):
-    pass

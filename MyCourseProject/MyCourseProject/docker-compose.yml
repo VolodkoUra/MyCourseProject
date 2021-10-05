@@ -1,16 +1,6 @@
-version: "3"
+version: '3.7'
 
 services:
-  db:
-    image: postgres
-    ports:
-    - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=CourseProjectDB
-    volumes:
-      - ./data/postgres:/var/lib/postgresql/data
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -18,5 +8,14 @@ services:
       - .:/MyCourseProject
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=CourseProjectDB
+
+volumes:
+  postgres_data:
